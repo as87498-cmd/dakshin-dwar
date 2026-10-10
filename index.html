@@ -657,4 +657,142 @@
 
     function setCategory(cat, btn) {
       activeCategory = cat;
-      document
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderMenu();
+    }
+
+    function renderMenu() {
+      const container = document.getElementById('menu-container');
+      const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+      container.innerHTML = '';
+
+      menuData.forEach(cat => {
+        if (activeCategory !== "All" && activeCategory !== cat.category) return;
+
+        const filteredItems = cat.items.filter(item => 
+          item.name.toLowerCase().includes(searchVal)
+        );
+
+        if (filteredItems.length === 0) return;
+
+        const secTitle = document.createElement('div');
+        secTitle.className = 'section-title';
+        secTitle.innerText = cat.category;
+        container.appendChild(secTitle);
+
+        filteredItems.forEach(item => {
+          const qty = cart[item.name]?.qty || 0;
+          const card = document.createElement('div');
+          card.className = 'item-card';
+          card.innerHTML = `
+            <div class="item-details">
+              <div class="veg-icon"></div>
+              <div class="item-name">${item.name}</div>
+              <div class="item-price">₹${item.price}</div>
+            </div>
+            <div>
+              <button class="add-btn" id="addBtn-${escapeId(item.name)}" style="display: ${qty > 0 ? 'none' : 'block'}" onclick="changeQty('${item.name}', ${item.price}, 1)">
+                ADD +
+              </button>
+              <div class="qty-box" id="qtyBox-${escapeId(item.name)}" style="display: ${qty > 0 ? 'flex' : 'none'}">
+                <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, -1)">−</button>
+                <span class="qty-count" id="count-${escapeId(item.name)}">${qty}</span>
+                <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, 1)">+</button>
+              </div>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      });
+    }
+
+    function escapeId(str) {
+      return str.replace(/[^a-zA-Z0-9]/g, '_');
+    }
+
+    function changeQty(name, price, delta) {
+      if (!cart[name]) cart[name] = { qty: 0, price: price };
+      cart[name].qty += delta;
+      if (cart[name].qty < 0) cart[name].qty = 0;
+
+      const q = cart[name].qty;
+      const addBtn = document.getElementById(`addBtn-${escapeId(name)}`);
+      const qtyBox = document.getElementById(`qtyBox-${escapeId(name)}`);
+      const countSpan = document.getElementById(`count-${escapeId(name)}`);
+
+      if (addBtn && qtyBox && countSpan) {
+        if (q > 0) {
+          addBtn.style.display = 'none';
+          qtyBox.style.display = 'flex';
+          countSpan.innerText = q;
+        } else {
+          addBtn.style.display = 'block';
+          qtyBox.style.display = 'none';
+        }
+      }
+      updateCartSummary();
+    }
+
+    function updateCartSummary() {
+      let totalAmount = 0;
+      let totalCount = 0;
+
+      for (let k in cart) {
+        if (cart[k].qty > 0) {
+          totalAmount += cart[k].qty * cart[k].price;
+          totalCount += cart[k].qty;
+        }
+      }
+
+      const cartBar = document.getElementById('cartBar');
+      if (totalCount > 0) {
+        cartBar.style.display = 'block';
+        document.getElementById('cartCount').innerText = totalCount;
+        document.getElementById('cartTotal').innerText = `₹${totalAmount}`;
+      } else {
+        cartBar.style.display = 'none';
+      }
+    }
+
+    function filterMenu() {
+      renderMenu();
+    }
+
+    function sendOrder() {
+      const table = document.getElementById('tableNo').value.trim() || "Not Mentioned";
+      let itemsList = [];
+      let grandTotal = 0;
+
+      for (let k in cart) {
+        if (cart[k].qty > 0) {
+          const cost = cart[k].qty * cart[k].price;
+          grandTotal += cost;
+          itemsList.push(`• ${k}  x${cart[k].qty} = ₹${cost}`);
+        }
+      }
+
+      if (itemsList.length === 0) {
+        alert("Please add at least 1 item to order.");
+        return;
+      }
+
+      const textMessage = 
+        `🛎️ *NEW ORDER - DAKSHIN DWAR*\n` +
+        `📍 *Table No:* ${table}\n` +
+        `---------------------------\n` +
+        itemsList.join('\n') + `\n` +
+        `---------------------------\n` +
+        `💰 *Grand Total: ₹${grandTotal}*\n` +
+        `---------------------------`;
+
+      const targetPhone = "919755746183";
+      window.location.href = `https://wa.me/${targetPhone}?text=${encodeURIComponent(textMessage)}`;
+    }
+
+    // Initialize
+    buildCategories();
+    renderMenu();
+  </script>
+</body>
+</html>
