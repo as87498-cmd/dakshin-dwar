@@ -1,1 +1,367 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>दक्षिण द्वार - Menu</title>
+  <style>
+    :root {
+      --primary: #1b4332;
+      --accent: #d4a373;
+      --bg: #fefae0;
+      --card-bg: #ffffff;
+      --text: #2d3142;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background-color: #f7f3e9; color: var(--text); padding-bottom: 90px; }
 
+    /* Splash Screen (Pehle 2.5 second ye photo dikhegi) */
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      background: #102a1e;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      text-align: center;
+      transition: opacity 0.5s ease;
+      padding: 20px;
+    }
+    #splash-screen img {
+      width: 90%;
+      max-width: 340px;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    #splash-screen p {
+      color: #faedcd;
+      margin-top: 15px;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    /* Main Menu Header */
+    header {
+      background: var(--primary);
+      color: #faedcd;
+      padding: 16px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    header h2 { font-size: 20px; }
+    header p { font-size: 12px; opacity: 0.8; }
+
+    /* Menu Items Container */
+    .container { max-width: 600px; margin: auto; padding: 12px; }
+    .category-title {
+      background: #2d6a4f;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin: 18px 0 10px 0;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .item-card {
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .item-info .item-name { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+    .item-info .item-price { color: var(--primary); font-weight: bold; font-size: 13px; }
+    
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .qty-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--primary);
+      background: #fff;
+      color: var(--primary);
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .qty-count { min-width: 18px; text-align: center; font-weight: 600; }
+
+    /* Table Input */
+    .table-box {
+      margin-bottom: 12px;
+      background: #fff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .table-box input {
+      flex: 1;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    /* Fixed Bottom Checkout Bar */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      padding: 12px 16px;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
+      z-index: 100;
+    }
+    .order-summary { font-size: 13px; }
+    .order-summary span { font-weight: bold; font-size: 16px; color: var(--primary); }
+    .place-order-btn {
+      background: #25D366;
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. SPLASH SCREEN: Yeh shuru me photo dikhayega -->
+  <div id="splash-screen">
+    <img src="welcome.png" alt="Welcome to Dakshin Dwar">
+    <p>Loading Menu...</p>
+  </div>
+
+  <!-- 2. MAIN HEADER -->
+  <header>
+    <h2>दक्षिण द्वार (Dakshin Dwar)</h2>
+    <p>Pure Veg • Authentic South Indian</p>
+  </header>
+
+  <div class="container">
+    <div class="table-box">
+      <label for="tableNo"><strong>Table No:</strong></label>
+      <input type="text" id="tableNo" placeholder="Table number dalein (jaise 2, 5)">
+    </div>
+
+    <div id="menu-container"></div>
+  </div>
+
+  <!-- 3. BOTTOM ORDER BAR -->
+  <div class="bottom-bar">
+    <div class="order-summary">
+      Total: <span id="total-price">₹0</span> (<span id="total-items">0</span> items)
+    </div>
+    <button class="place-order-btn" onclick="sendOrder()">Place Order (WhatsApp)</button>
+  </div>
+
+  <script>
+    // 2.5 second ke baad welcome image automatically hide ho jayegi
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      splash.style.opacity = '0';
+      setTimeout(() => splash.style.display = 'none', 500);
+    }, 2500);
+
+    const menuData = [
+      {
+        category: "Best Sellers",
+        items: [
+          { name: "Madurai Ghee Roast Dosa", price: 250 },
+          { name: "Benne Dosa", price: 190 },
+          { name: "Rava Masala Dosa", price: 190 },
+          { name: "Ghee Podi Masala Dosa", price: 190 },
+          { name: "Dakshin Dwar Special", price: 265 },
+          { name: "Open Butter Masala Dosa", price: 180 },
+          { name: "Pizza Dosa", price: 265 }
+        ]
+      },
+      {
+        category: "Uttapam",
+        items: [
+          { name: "Plain Uttapam", price: 105 },
+          { name: "Onion Uttapam", price: 115 },
+          { name: "Tomato Uttapam", price: 115 },
+          { name: "Tomato Onion Uttapam", price: 125 },
+          { name: "Mix Veg Uttapam", price: 135 },
+          { name: "Spicy Vegetable Uttapam", price: 135 },
+          { name: "Paneer Masala Uttapam", price: 150 },
+          { name: "Cheese Burst Uttapam", price: 160 }
+        ]
+      },
+      {
+        category: "Idli",
+        items: [
+          { name: "Classic Idli (2 Pcs)", price: 95 },
+          { name: "Button Idli (10 Pcs)", price: 95 },
+          { name: "Masala Button Idli (10 Pcs)", price: 125 },
+          { name: "Fried Idli (Deep Fry)", price: 100 },
+          { name: "Ghee Podi Thatte Idli", price: 115 },
+          { name: "Idli Chat (6 Pcs)", price: 70 },
+          { name: "Idli - Vada Mix", price: 95 },
+          { name: "Dahi Idli (1 Pcs)", price: 80 }
+        ]
+      },
+      {
+        category: "Vada",
+        items: [
+          { name: "Medu Vada (2 Pcs)", price: 95 },
+          { name: "Dahi Vada (1 Pcs)", price: 80 }
+        ]
+      },
+      {
+        category: "Dosa",
+        items: [
+          { name: "Plain Dosa", price: 105 },
+          { name: "Masala Dosa", price: 145 },
+          { name: "Paper Plain Dosa", price: 185 },
+          { name: "Paper Masala Dosa", price: 215 },
+          { name: "Onion Masala Dosa", price: 160 },
+          { name: "Rava Plain Dosa", price: 170 },
+          { name: "Onion Rava Masala Dosa", price: 215 },
+          { name: "Set Dosa (3 Pcs)", price: 170 },
+          { name: "Mysore Masala Dosa", price: 170 },
+          { name: "Cheese Mysore Masala Dosa", price: 215 },
+          { name: "Cheese Plain Dosa", price: 180 },
+          { name: "Cheese Masala Dosa", price: 205 },
+          { name: "Paneer Masala Dosa", price: 190 },
+          { name: "Jali Masala Dosa", price: 180 },
+          { name: "Banglore Spicy Dosa", price: 170 },
+          { name: "Kal Dosa", price: 180 },
+          { name: "Jini Dosa", price: 215 },
+          { name: "Loni Spong Dosa", price: 170 },
+          { name: "Mint Podi Masala Dosa", price: 180 },
+          { name: "Curry Leaves Podi Dosa", price: 180 },
+          { name: "Garlic Ghee Roast Dosa", price: 210 },
+          { name: "Malleshwaram Dosa", price: 240 }
+        ]
+      },
+      {
+        category: "Desserts & Beverages",
+        items: [
+          { name: "Pineapple Rava Kesari", price: 125 },
+          { name: "Filter Coffee", price: 55 }
+        ]
+      },
+      {
+        category: "Extras",
+        items: [
+          { name: "Extra Ghee", price: 35 },
+          { name: "Extra Masala", price: 35 },
+          { name: "Extra Cheese", price: 35 },
+          { name: "Extra Paneer", price: 35 }
+        ]
+      }
+    ];
+
+    const cart = {};
+
+    function renderMenu() {
+      const container = document.getElementById('menu-container');
+      container.innerHTML = '';
+
+      menuData.forEach(cat => {
+        const title = document.createElement('div');
+        title.className = 'category-title';
+        title.innerText = cat.category;
+        container.appendChild(title);
+
+        cat.items.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'item-card';
+          card.innerHTML = `
+            <div class="item-info">
+              <div class="item-name">${item.name}</div>
+              <div class="item-price">₹${item.price}</div>
+            </div>
+            <div class="qty-controls">
+              <button class="qty-btn" onclick="updateQty('${item.name}', ${item.price}, -1)">-</button>
+              <span class="qty-count" id="qty-${item.name}">0</span>
+              <button class="qty-btn" onclick="updateQty('${item.name}', ${item.price}, 1)">+</button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      });
+    }
+
+    function updateQty(name, price, delta) {
+      if (!cart[name]) cart[name] = { qty: 0, price: price };
+      cart[name].qty += delta;
+      if (cart[name].qty < 0) cart[name].qty = 0;
+
+      document.getElementById(`qty-${name}`).innerText = cart[name].qty;
+      calculateTotal();
+    }
+
+    function calculateTotal() {
+      let total = 0;
+      let count = 0;
+      for (const key in cart) {
+        if (cart[key].qty > 0) {
+          total += cart[key].qty * cart[key].price;
+          count += cart[key].qty;
+        }
+      }
+      document.getElementById('total-price').innerText = `₹${total}`;
+      document.getElementById('total-items').innerText = count;
+    }
+
+    function sendOrder() {
+      const tableNo = document.getElementById('tableNo').value.trim() || "Not specified";
+      let orderItems = [];
+      let grandTotal = 0;
+
+      for (const name in cart) {
+        if (cart[name].qty > 0) {
+          const itemCost = cart[name].qty * cart[name].price;
+          grandTotal += itemCost;
+          orderItems.push(`- ${name} x ${cart[name].qty} = ₹${itemCost}`);
+        }
+      }
+
+      if (orderItems.length === 0) {
+        alert("Kripya order place karne ke liye kam se kam ek item select karein.");
+        return;
+      }
+
+      const msg = `*NEW ORDER - Dakshin Dwar*%0A` +
+                  `*Table:* ${tableNo}%0A%0A` +
+                  `*Items:*%0A` +
+                  orderItems.map(encodeURIComponent).join('%0A') +
+                  `%0A%0A*Total Amount:* ₹${grandTotal}`;
+
+      // Customer ka order seedhe 9755746183 par WhatsApp message ban kar jayega
+      const phone = "919755746183";
+      window.location.href = `https://wa.me/${phone}?text=${msg}`;
+    }
+
+    renderMenu();
+  </script>
+</body>
+</html>
