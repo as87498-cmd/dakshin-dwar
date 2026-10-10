@@ -3,191 +3,555 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>दक्षिण द्वार - Menu</title>
+  <title>दक्षिण द्वार | Dakshin Dwar</title>
+  <!-- Google Fonts for Premium Look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --primary: #1b4332;
-      --accent: #d4a373;
-      --bg: #fefae0;
-      --card-bg: #ffffff;
-      --text: #2d3142;
+      --primary: #0F3826;
+      --primary-light: #185339;
+      --gold: #D4AF37;
+      --gold-light: #FBF5E5;
+      --bg: #F8F6F0;
+      --card-bg: #FFFFFF;
+      --text-dark: #1E232A;
+      --text-muted: #64748B;
+      --veg-green: #0E8345;
+      --whatsapp: #25D366;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    body { background-color: #f7f3e9; color: var(--text); padding-bottom: 90px; }
 
-    /* Splash Screen (Pehle 2.5 second ye photo dikhegi) */
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      background-color: var(--bg);
+      color: var(--text-dark);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding-bottom: 110px;
+      overflow-x: hidden;
+    }
+
+    /* =================== 1. WELCOME SPLASH SCREEN =================== */
     #splash-screen {
       position: fixed;
       inset: 0;
-      background: #102a1e;
+      background: radial-gradient(circle at center, #184e36 0%, #082115 100%);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 9999;
-      text-align: center;
-      transition: opacity 0.5s ease;
-      padding: 20px;
+      z-index: 99999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+      padding: 24px;
     }
-    #splash-screen img {
-      width: 90%;
+    
+    .splash-card {
+      background: #FFFDF7;
+      border: 2px solid var(--gold);
+      border-radius: 28px;
+      padding: 36px 24px 28px;
       max-width: 340px;
-      height: auto;
-      border-radius: 20px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+      animation: popIn 0.7s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    #splash-screen p {
-      color: #faedcd;
-      margin-top: 15px;
-      font-size: 14px;
-      letter-spacing: 1px;
+    @keyframes popIn {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
-    /* Main Menu Header */
-    header {
+    .splash-logo-circle {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
       background: var(--primary);
-      color: #faedcd;
-      padding: 16px;
-      text-align: center;
+      border: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #F8E7BE;
+      font-family: 'Cinzel', serif;
+      font-weight: 800;
+      font-size: 24px;
+      box-shadow: 0 6px 15px rgba(15, 56, 38, 0.3);
+    }
+
+    .splash-welcome {
+      font-size: 11px;
+      letter-spacing: 3px;
+      font-weight: 700;
+      color: #9C782F;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .splash-title-hi {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+
+    .splash-title-en {
+      font-family: 'Cinzel', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #A3792A;
+      letter-spacing: 2px;
+      margin-top: 2px;
+    }
+
+    .splash-divider {
+      width: 60px;
+      height: 2px;
+      background: var(--gold);
+      margin: 14px auto;
+      border-radius: 2px;
+    }
+
+    /* Embedded Vector Art of South Indian Thali */
+    .thali-art {
+      width: 100%;
+      max-width: 250px;
+      margin: 8px auto 14px;
+      display: block;
+    }
+
+    .splash-tagline {
+      font-size: 13px;
+      color: #556270;
+      font-weight: 500;
+    }
+
+    .splash-loader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 18px;
+    }
+    .splash-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .splash-dot:nth-child(2) { animation-delay: 0.2s; }
+    .splash-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+    /* =================== 2. HEADER =================== */
+    header {
+      background: linear-gradient(135deg, #092619 0%, #15452F 100%);
+      color: #FFFDF5;
+      padding: 18px 16px 14px;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.12);
     }
-    header h2 { font-size: 20px; }
-    header p { font-size: 12px; opacity: 0.8; }
-
-    /* Menu Items Container */
-    .container { max-width: 600px; margin: auto; padding: 12px; }
-    .category-title {
-      background: #2d6a4f;
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 6px;
-      margin: 18px 0 10px 0;
-      font-size: 15px;
-      text-transform: uppercase;
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 650px;
+      margin: auto;
+    }
+    .brand-wrap h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #FFF9E6;
       letter-spacing: 0.5px;
     }
-    .item-card {
-      background: var(--card-bg);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 14px;
-      margin-bottom: 8px;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    .brand-wrap span {
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 1.5px;
+      font-weight: 600;
     }
-    .item-info .item-name { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
-    .item-info .item-price { color: var(--primary); font-weight: bold; font-size: 13px; }
+    .veg-pill {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #E2F0D9;
+    }
+    .veg-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ADE80;
+    }
+
+    /* =================== 3. SEARCH & CONTROLS =================== */
+    .controls-wrapper {
+      max-width: 650px;
+      margin: 12px auto 0;
+      padding: 0 16px;
+    }
+
+    .table-card {
+      background: #FFFFFF;
+      padding: 10px 14px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      border: 1px solid #ECECEC;
+      margin-bottom: 10px;
+    }
+    .table-card svg { stroke: var(--primary); flex-shrink: 0; }
+    .table-card input {
+      border: none;
+      outline: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+      width: 100%;
+      font-family: inherit;
+    }
+
+    .search-box {
+      background: #FFFFFF;
+      padding: 10px 14px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      border: 1px solid #ECECEC;
+    }
+    .search-box input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 13.5px;
+      font-family: inherit;
+    }
+
+    /* Category Filter Pills */
+    .categories-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px 16px 6px;
+      scrollbar-width: none;
+      max-width: 650px;
+      margin: auto;
+    }
+    .categories-bar::-webkit-scrollbar { display: none; }
     
-    .qty-controls {
+    .cat-btn {
+      white-space: nowrap;
+      border: none;
+      background: #EAE6DA;
+      color: #4A5568;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .cat-btn.active {
+      background: var(--primary);
+      color: #FFFDF0;
+      box-shadow: 0 3px 10px rgba(15, 56, 38, 0.25);
+    }
+
+    /* =================== 4. MENU ITEMS =================== */
+    .menu-container {
+      max-width: 650px;
+      margin: 10px auto;
+      padding: 0 16px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 22px 0 10px;
       display: flex;
       align-items: center;
       gap: 8px;
+      letter-spacing: 0.3px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #DDD5C7;
+    }
+
+    .item-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid #F0EEE6;
+      transition: transform 0.15s ease;
+    }
+    .item-card:active { transform: scale(0.99); }
+
+    .item-details { flex: 1; padding-right: 12px; }
+    
+    .veg-icon {
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid var(--veg-green);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3px;
+      margin-bottom: 4px;
+    }
+    .veg-icon::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--veg-green);
+      border-radius: 50%;
+    }
+
+    .item-name {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #1F2937;
+      line-height: 1.3;
+    }
+    .item-price {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-top: 4px;
+    }
+
+    /* Counter / Add Button */
+    .add-btn {
+      background: #FFFFFF;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 8px 22px;
+      border-radius: 22px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(15, 56, 38, 0.08);
+      transition: all 0.2s;
+    }
+    .add-btn:active { background: var(--primary); color: #fff; }
+
+    .qty-box {
+      display: none;
+      align-items: center;
+      background: var(--primary);
+      border-radius: 22px;
+      padding: 3px;
+      box-shadow: 0 3px 10px rgba(15, 56, 38, 0.25);
     }
     .qty-btn {
       width: 32px;
       height: 32px;
-      border: 1px solid var(--primary);
-      background: #fff;
-      color: var(--primary);
+      border: none;
+      background: transparent;
+      color: #FFFDF0;
+      font-size: 18px;
+      font-weight: 700;
       border-radius: 50%;
-      font-weight: bold;
-      font-size: 16px;
       cursor: pointer;
-    }
-    .qty-count { min-width: 18px; text-align: center; font-weight: 600; }
-
-    /* Table Input */
-    .table-box {
-      margin-bottom: 12px;
-      background: #fff;
-      padding: 10px 14px;
-      border-radius: 8px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
     }
-    .table-box input {
-      flex: 1;
-      padding: 8px 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+    .qty-count {
+      min-width: 24px;
+      text-align: center;
+      color: #FFFFFF;
+      font-weight: 700;
       font-size: 14px;
     }
 
-    /* Fixed Bottom Checkout Bar */
-    .bottom-bar {
+    /* =================== 5. BOTTOM WHATSAPP ORDER BAR =================== */
+    .cart-bar-wrap {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: #fff;
       padding: 12px 16px;
-      border-top: 1px solid #ddd;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 600px;
-      margin: auto;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
-      z-index: 100;
+      background: #FFFFFF;
+      border-top: 1px solid #ECECEC;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+      z-index: 1000;
+      display: none;
     }
-    .order-summary { font-size: 13px; }
-    .order-summary span { font-weight: bold; font-size: 16px; color: var(--primary); }
-    .place-order-btn {
-      background: #25D366;
-      color: #fff;
+    .cart-bar {
+      max-width: 650px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cart-summary .total-items {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .cart-summary .total-price {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .whatsapp-btn {
+      background: var(--whatsapp);
+      color: #FFFFFF;
       border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
-      font-weight: bold;
+      padding: 12px 22px;
+      border-radius: 26px;
       font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       cursor: pointer;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+      70% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
     }
   </style>
 </head>
 <body>
 
-  <!-- 1. SPLASH SCREEN: Yeh shuru me photo dikhayega -->
+  <!-- ================= 1. SPLASH SCREEN (Built-in Clean Vector Graphic) ================= -->
   <div id="splash-screen">
-    <img src="welcome.png" alt="Welcome to Dakshin Dwar">
-    <p>Loading Menu...</p>
+    <div class="splash-card">
+      <div class="splash-logo-circle">DD</div>
+      <div class="splash-welcome">WELCOME TO</div>
+      <div class="splash-title-hi">दक्षिण द्वार</div>
+      <div class="splash-title-en">DAKSHIN DWAR</div>
+      <div class="splash-divider"></div>
+
+      <!-- Complete SVG Illustration: Banana Leaf, Crispy Dosa, Idli, Vada, Chutneys -->
+      <svg class="thali-art" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Banana Leaf Base -->
+        <ellipse cx="200" cy="115" rx="190" ry="95" fill="#2E7D32" stroke="#1B5E20" stroke-width="3" />
+        <line x1="30" y1="115" x2="370" y2="115" stroke="#43A047" stroke-width="2.5" />
+        <path d="M70,115 L60,80 M130,115 L120,70 M190,115 L180,65 M250,115 L240,70 M310,115 L300,80" stroke="#388E3C" stroke-width="1.5" />
+        <path d="M70,115 L60,150 M130,115 L120,160 M190,115 L180,165 M250,115 L240,160 M310,115 L300,150" stroke="#388E3C" stroke-width="1.5" />
+        <!-- Golden Roast Dosa -->
+        <polygon points="70,105 330,85 315,115 60,135" fill="#E5A63B" stroke="#B07212" stroke-width="2" />
+        <line x1="130" y1="100" x2="120" y2="125" stroke="#9A5D07" stroke-width="2" opacity="0.6"/>
+        <line x1="190" y1="95" x2="180" y2="120" stroke="#9A5D07" stroke-width="2" opacity="0.6"/>
+        <line x1="250" y1="90" x2="240" y2="115" stroke="#9A5D07" stroke-width="2" opacity="0.6"/>
+        <!-- 2 Soft Idlis -->
+        <ellipse cx="90" cy="155" rx="28" ry="24" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
+        <ellipse cx="140" cy="158" rx="28" ry="24" fill="#FAFAFA" stroke="#E2E8F0" stroke-width="1.5" />
+        <!-- Medu Vada -->
+        <circle cx="205" cy="158" r="24" fill="#C87D28" stroke="#874807" stroke-width="2" />
+        <circle cx="205" cy="158" r="8" fill="#2E7D32" stroke="#874807" stroke-width="1.5" />
+        <!-- Coconut Chutney -->
+        <circle cx="265" cy="155" r="18" fill="#FFFFFF" stroke="#D4AF37" stroke-width="2" />
+        <circle cx="264" cy="153" r="1.5" fill="#222" /><circle cx="268" cy="156" r="1" fill="#222" />
+        <!-- Tomato Chutney -->
+        <circle cx="310" cy="150" r="18" fill="#D32F2F" stroke="#D4AF37" stroke-width="2" />
+        <!-- Sambar -->
+        <circle cx="355" cy="138" r="20" fill="#E65100" stroke="#D4AF37" stroke-width="2" />
+      </svg>
+
+      <div class="splash-tagline">Authentic South Indian Flavours</div>
+      <div class="splash-loader">
+        <div class="splash-dot"></div>
+        <div class="splash-dot"></div>
+        <div class="splash-dot"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- 2. MAIN HEADER -->
+  <!-- ================= 2. HEADER ================= -->
   <header>
-    <h2>दक्षिण द्वार (Dakshin Dwar)</h2>
-    <p>Pure Veg • Authentic South Indian</p>
+    <div class="header-top">
+      <div class="brand-wrap">
+        <h1>दक्षिण द्वार</h1>
+        <span>DAKSHIN DWAR • PURE VEG</span>
+      </div>
+      <div class="veg-pill">
+        <div class="veg-dot"></div>
+        100% Pure Veg
+      </div>
+    </div>
   </header>
 
-  <div class="container">
-    <div class="table-box">
-      <label for="tableNo"><strong>Table No:</strong></label>
-      <input type="text" id="tableNo" placeholder="Table number dalein (jaise 2, 5)">
+  <!-- ================= 3. CONTROLS ================= -->
+  <div class="controls-wrapper">
+    <!-- Table Input -->
+    <div class="table-card">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 18v3M20 18v3M4 11h16M2 8h20a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
+      </svg>
+      <input type="text" id="tableNo" placeholder="Enter Table Number (e.g. Table 4)">
     </div>
 
-    <div id="menu-container"></div>
+    <!-- Search Input -->
+    <div class="search-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search dish (e.g. Dosa, Idli, Coffee...)" onkeyup="filterMenu()">
+    </div>
   </div>
 
-  <!-- 3. BOTTOM ORDER BAR -->
-  <div class="bottom-bar">
-    <div class="order-summary">
-      Total: <span id="total-price">₹0</span> (<span id="total-items">0</span> items)
+  <!-- Category Quick Filter -->
+  <div class="categories-bar" id="categoryTabs"></div>
+
+  <!-- ================= 4. MENU LIST ================= -->
+  <div class="menu-container" id="menu-container"></div>
+
+  <!-- ================= 5. WHATSAPP BOTTOM BAR ================= -->
+  <div class="cart-bar-wrap" id="cartBar">
+    <div class="cart-bar">
+      <div class="cart-summary">
+        <div class="total-items"><span id="cartCount">0</span> items selected</div>
+        <div class="total-price" id="cartTotal">₹0</div>
+      </div>
+      <button class="whatsapp-btn" onclick="sendOrder()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+        </svg>
+        Place Order
+      </button>
     </div>
-    <button class="place-order-btn" onclick="sendOrder()">Place Order (WhatsApp)</button>
   </div>
 
   <script>
-    // 2.5 second ke baad welcome image automatically hide ho jayegi
-    setTimeout(() => {
-      const splash = document.getElementById('splash-screen');
-      splash.style.opacity = '0';
-      setTimeout(() => splash.style.display = 'none', 500);
-    }, 2500);
+    // 1. Splash Screen timeout (2.8 seconds)
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        splash.style.opacity = '0';
+        splash.style.visibility = 'hidden';
+      }, 2800);
+    });
 
+    // Exact Menu Data
     const menuData = [
       {
         category: "Best Sellers",
@@ -199,6 +563,33 @@
           { name: "Dakshin Dwar Special", price: 265 },
           { name: "Open Butter Masala Dosa", price: 180 },
           { name: "Pizza Dosa", price: 265 }
+        ]
+      },
+      {
+        category: "Dosa",
+        items: [
+          { name: "Plain Dosa", price: 105 },
+          { name: "Masala Dosa", price: 145 },
+          { name: "Paper Plain Dosa", price: 185 },
+          { name: "Paper Masala Dosa", price: 215 },
+          { name: "Onion Masala Dosa", price: 160 },
+          { name: "Rava Plain Dosa", price: 170 },
+          { name: "Onion Rava Masala Dosa", price: 215 },
+          { name: "Set Dosa (3 Pcs)", price: 170 },
+          { name: "Mysore Masala Dosa", price: 170 },
+          { name: "Cheese Mysore Masala Dosa", price: 215 },
+          { name: "Cheese Plain Dosa", price: 180 },
+          { name: "Cheese Masala Dosa", price: 205 },
+          { name: "Paneer Masala Dosa", price: 190 },
+          { name: "Jali Masala Dosa", price: 180 },
+          { name: "Banglore Spicy Dosa", price: 170 },
+          { name: "Kal Dosa", price: 180 },
+          { name: "Jini Dosa", price: 215 },
+          { name: "Loni Spong Dosa", price: 170 },
+          { name: "Mint Podi Masala Dosa", price: 180 },
+          { name: "Curry Leaves Podi Dosa", price: 180 },
+          { name: "Garlic Ghee Roast Dosa", price: 210 },
+          { name: "Malleshwaram Dosa", price: 240 }
         ]
       },
       {
@@ -235,33 +626,6 @@
         ]
       },
       {
-        category: "Dosa",
-        items: [
-          { name: "Plain Dosa", price: 105 },
-          { name: "Masala Dosa", price: 145 },
-          { name: "Paper Plain Dosa", price: 185 },
-          { name: "Paper Masala Dosa", price: 215 },
-          { name: "Onion Masala Dosa", price: 160 },
-          { name: "Rava Plain Dosa", price: 170 },
-          { name: "Onion Rava Masala Dosa", price: 215 },
-          { name: "Set Dosa (3 Pcs)", price: 170 },
-          { name: "Mysore Masala Dosa", price: 170 },
-          { name: "Cheese Mysore Masala Dosa", price: 215 },
-          { name: "Cheese Plain Dosa", price: 180 },
-          { name: "Cheese Masala Dosa", price: 205 },
-          { name: "Paneer Masala Dosa", price: 190 },
-          { name: "Jali Masala Dosa", price: 180 },
-          { name: "Banglore Spicy Dosa", price: 170 },
-          { name: "Kal Dosa", price: 180 },
-          { name: "Jini Dosa", price: 215 },
-          { name: "Loni Spong Dosa", price: 170 },
-          { name: "Mint Podi Masala Dosa", price: 180 },
-          { name: "Curry Leaves Podi Dosa", price: 180 },
-          { name: "Garlic Ghee Roast Dosa", price: 210 },
-          { name: "Malleshwaram Dosa", price: 240 }
-        ]
-      },
-      {
         category: "Desserts & Beverages",
         items: [
           { name: "Pineapple Rava Kesari", price: 125 },
@@ -280,88 +644,17 @@
     ];
 
     const cart = {};
+    let activeCategory = "All";
 
-    function renderMenu() {
-      const container = document.getElementById('menu-container');
-      container.innerHTML = '';
-
-      menuData.forEach(cat => {
-        const title = document.createElement('div');
-        title.className = 'category-title';
-        title.innerText = cat.category;
-        container.appendChild(title);
-
-        cat.items.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'item-card';
-          card.innerHTML = `
-            <div class="item-info">
-              <div class="item-name">${item.name}</div>
-              <div class="item-price">₹${item.price}</div>
-            </div>
-            <div class="qty-controls">
-              <button class="qty-btn" onclick="updateQty('${item.name}', ${item.price}, -1)">-</button>
-              <span class="qty-count" id="qty-${item.name}">0</span>
-              <button class="qty-btn" onclick="updateQty('${item.name}', ${item.price}, 1)">+</button>
-            </div>
-          `;
-          container.appendChild(card);
-        });
+    // Build Category Tabs
+    function buildCategories() {
+      const catBar = document.getElementById('categoryTabs');
+      catBar.innerHTML = `<button class="cat-btn active" onclick="setCategory('All', this)">All</button>`;
+      menuData.forEach(c => {
+        catBar.innerHTML += `<button class="cat-btn" onclick="setCategory('${c.category}', this)">${c.category}</button>`;
       });
     }
 
-    function updateQty(name, price, delta) {
-      if (!cart[name]) cart[name] = { qty: 0, price: price };
-      cart[name].qty += delta;
-      if (cart[name].qty < 0) cart[name].qty = 0;
-
-      document.getElementById(`qty-${name}`).innerText = cart[name].qty;
-      calculateTotal();
-    }
-
-    function calculateTotal() {
-      let total = 0;
-      let count = 0;
-      for (const key in cart) {
-        if (cart[key].qty > 0) {
-          total += cart[key].qty * cart[key].price;
-          count += cart[key].qty;
-        }
-      }
-      document.getElementById('total-price').innerText = `₹${total}`;
-      document.getElementById('total-items').innerText = count;
-    }
-
-    function sendOrder() {
-      const tableNo = document.getElementById('tableNo').value.trim() || "Not specified";
-      let orderItems = [];
-      let grandTotal = 0;
-
-      for (const name in cart) {
-        if (cart[name].qty > 0) {
-          const itemCost = cart[name].qty * cart[name].price;
-          grandTotal += itemCost;
-          orderItems.push(`- ${name} x ${cart[name].qty} = ₹${itemCost}`);
-        }
-      }
-
-      if (orderItems.length === 0) {
-        alert("Kripya order place karne ke liye kam se kam ek item select karein.");
-        return;
-      }
-
-      const msg = `*NEW ORDER - Dakshin Dwar*%0A` +
-                  `*Table:* ${tableNo}%0A%0A` +
-                  `*Items:*%0A` +
-                  orderItems.map(encodeURIComponent).join('%0A') +
-                  `%0A%0A*Total Amount:* ₹${grandTotal}`;
-
-      // Customer ka order seedhe 9755746183 par WhatsApp message ban kar jayega
-      const phone = "919755746183";
-      window.location.href = `https://wa.me/${phone}?text=${msg}`;
-    }
-
-    renderMenu();
-  </script>
-</body>
-</html>
+    function setCategory(cat, btn) {
+      activeCategory = cat;
+      document
